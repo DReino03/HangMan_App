@@ -29,7 +29,7 @@ import androidx.navigation.NavController
 fun GameScreen(difficulty: String?,navController: NavController) {
     var attempts  by remember{ mutableStateOf(6)}
     var gameWord by remember{ mutableStateOf(getWord(difficulty))}
-    var clickedLetter = ""
+    var clickedLetter = 'a'
     var encriptedWord by remember{ mutableStateOf("")}
     var updatedWord by remember{ mutableStateOf("")}
     val padding = 50.dp
@@ -38,6 +38,8 @@ fun GameScreen(difficulty: String?,navController: NavController) {
     updatedWord = encriptedWord
     var palabraadivinar = ""
     palabraadivinar = encriptedWord
+    var showWord by remember{ mutableStateOf("")}
+
 
     println()
     print("Palabra a adivinar: $palabraadivinar")
@@ -56,7 +58,8 @@ fun GameScreen(difficulty: String?,navController: NavController) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = updatedWord,
+
+                    text = showWord,
                     fontSize = 30.sp
                 )
             }
@@ -80,16 +83,16 @@ fun GameScreen(difficulty: String?,navController: NavController) {
                     Spacer(modifier = Modifier.width(5.dp))
                     Button(
                         onClick = {
-                            clickedLetter = i.toString().toUpperCase()
+                            clickedLetter = i.toUpperCase()
                             println(clickedLetter)
-                            updatedWord = modificadorLetra(clickedLetter, gameWord, encriptedWord)
+                            updatedWord = modificadorLetra(clickedLetter, gameWord, updatedWord)
+                            showWord = updatedWord
                             if (clickedLetter !in gameWord.toUpperCase()) {
                                 attempts--
                             }}){
                         Text(text = "$i")
                     }
                 }
-
             }
             Row(
                 modifier = Modifier
@@ -102,17 +105,18 @@ fun GameScreen(difficulty: String?,navController: NavController) {
                 for (i in abecedario1){
                     Spacer(modifier = Modifier.width(5.dp))
                     Button(onClick = {
-                            clickedLetter = i.toString().toUpperCase()
+                            clickedLetter = i.toUpperCase()
                             println(clickedLetter)
                             updatedWord = modificadorLetra(clickedLetter, gameWord, encriptedWord)
-                            if (clickedLetter !in gameWord.toUpperCase()) {
+                            showWord = updatedWord
+
+                        if (clickedLetter !in gameWord.toUpperCase()) {
                             attempts--
                              }
                     }) {
                         Text(text = "$i")
                     }
                 }
-
             }
             Row(
                 modifier = Modifier
@@ -125,9 +129,11 @@ fun GameScreen(difficulty: String?,navController: NavController) {
                 for (i in abecedario2){
                     Spacer(modifier = Modifier.width(5.dp))
                     Button(onClick = {
-                        clickedLetter = i.toString().toUpperCase()
+                        clickedLetter = i.toUpperCase()
                         println(clickedLetter)
                         updatedWord = modificadorLetra(clickedLetter, gameWord, encriptedWord)
+                        showWord = updatedWord
+
                         if (clickedLetter !in gameWord.toUpperCase()) {
                             attempts--
                         }
@@ -149,9 +155,11 @@ fun GameScreen(difficulty: String?,navController: NavController) {
                     Spacer(modifier = Modifier.width(5.dp))
 
                     Button(onClick = {
-                        clickedLetter = i.toString().toUpperCase()
+                        clickedLetter = i.toUpperCase()
                         println(clickedLetter)
                         updatedWord = modificadorLetra(clickedLetter, gameWord, encriptedWord)
+                        showWord = updatedWord
+
                         if (clickedLetter !in gameWord.toUpperCase()) {
                             attempts--
                         }
@@ -172,22 +180,19 @@ fun GameScreen(difficulty: String?,navController: NavController) {
                     Spacer(modifier = Modifier.width(5.dp))
 
                     Button(onClick = {
-                        clickedLetter = i.toString().toUpperCase()
+                        clickedLetter = i.toUpperCase()
                         println(clickedLetter)
                         enabled.value = false
-                        updatedWord = modificadorLetra(clickedLetter, gameWord, encriptedWord)
+                        updatedWord = modificadorLetra(clickedLetter, gameWord, updatedWord)
+                        showWord = updatedWord
                         if (clickedLetter !in gameWord.toUpperCase()) {
                             attempts--
                         }
                     },
-
                     //enabled = enabled.value
                     ) {
                         Text(text = "$i")
                     }
-
-
-
                 }
             }
             Spacer(modifier = Modifier.size(padding))
@@ -211,16 +216,24 @@ fun GameScreen(difficulty: String?,navController: NavController) {
         }
 
 
-fun modificadorLetra(clickedLetter: String, gameWord: String, encriptedWord: String): String {
-    var updatedWord = encriptedWord
+fun modificadorLetra(clickedLetter: Char, gameWord: String, updatedeWord: String): String {
+    //Encripted solo barrabajar
+    //Updated barrabajas y letras
+    var printLetters = ""
+    var word = updatedeWord
+    var list = word.toCharArray()
+    print("-------------ENTRA EN LA FUNCION---------------------")
+    print(word)
     for (i in gameWord.indices) {
-        if (clickedLetter == gameWord[i].toString()) {
-            updatedWord += clickedLetter
-        } else {
-            updatedWord += encriptedWord[i]
+        print("-------------ITERACON DEL BUCLE---------------------")
+        if (clickedLetter == gameWord[i]) {
+            print("-------------LETRA CORRECTA---------------------")
+            list[i] = clickedLetter
+            print(list)
         }
     }
-    return updatedWord
+
+    return list.joinToString("")
 }
 fun getWord(difficulty: String?): String {
     var gameWord = ""
